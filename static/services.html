@@ -80,6 +80,91 @@
       </div>
   </section>
 </header>
+<section class="w3l-about-breadcrumb text-left">
+    <div class="breadcrumb-bg breadcrumb-bg-services py-sm-5 py-4">
+        <div class="container grid-breadcrumb py-2">
+            <h2 class="title-big">Our Services</h2>
+            <ul class="breadcrumbs-custom-path mt-md-2">
+                <li><a href="index.html">Home</a></li>
+                <li class="active"><span class="fa fa-arrow-right mx-2" aria-hidden="true"></span> Services </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<section class="w3l-content-6" id="about">
+  <!-- /content-6-main-->
+  <div class="content-6-mian py-5">
+    <div class="container py-lg-5 py-md-4">
+      <div class="content-info-in row">
+        <div class="content-gd col-lg-6 pr-lg-4">
+          <div class="title-content text-left mb-sm-4 mb-3">
+            <h2 class="title-small">1.ftp service</h2>
+            <h2 class="title-big ">Télécharger et partager des fichiers</h2>
+          </div>
+          <p>Nous utilisons docker dans le serveur distant pour construire un serveur ftp. Afin de gérer votre ftp plus commodément, nous vous recommandons d'utiliser <strong>FileZila</strong>.</p>
+          <h4 class="mb-sm-4 mb-3"></h4>
+          <h3>installer FileZila sous ubuntu</h3>
+          <ul class="cont-4 mt-4">
+			  <li>$sudo apt-get update</li>
+			  <li>$sudo apt-get install filezilla</li>
+			  </ul>
+		 <h3>connecter au serveur</h3>
+		 <p>Pour démarrer Filezila ,vous pouvez taper filezila dans terminal et vous allez voir comme figure 1</p>
+		 <p>Remplissez ensuite <strong>host</strong> ci-dessus :</p>
+		  <ul class="cont-4 mt-4">
+			  <li>host :52.47.87.250</li>
+			  <li>Username :<span>user</span></li>
+			  <li>Password :<span>userpwd</span></li>
+			  <li>Port :21</li>
+			  </ul>
+			  <p></p>
+        </div>
+        <div class="content-gd col-lg-6 ">
+          <img src="assets/images/Filezila.png" alt="" class="pic01">
+          <h3 class="title-small"><i>figure 1</i></h3>
+        </div>
+        <div class="content-gd col-lg-8">
+          <img src="assets/images/connect.png" alt="" class="pic01">
+          <h3 class="title-small"><i>figure 2</i></h3>
+        </div>
+        
+          <div class="pic02">
+        <img src="" alt="">
+    </div>
+    
+      </div>
+    </div>
+</section>
+<section class="w3l-specification-6 py-5">
+	<!-- /specification-6-->
+	  <div class="specification-6-mian py-lg-5 py-md-4">
+			 <div class="container">
+					<div class="align-counter-6-inf-cols row">
+						
+						<div class="title-content text-left mb-sm-4 mb-3">
+							<h3>Parcourir / modifier les fichiers</h3>
+							<p>FileZilla fournit des fonctions de navigation et de modification, qui doivent être modifiées dans Edition-> Paramètres-> Edition de fichiers-> Associations de types de fichiers, qui correspondent au type de fichier et au programme d'accès correspondant utilisé. Si vous souhaitez accéder aux fichiers txt / fichiers c ++, nous vous recommandons d'utiliser Geany, doc utilise libreoffice</p>
+							<h3>Installez le programme correspondant</h3>
+							<ul class="cont-4 mt-4">
+			  <li>$sudo apt-get install geany</li>
+			  <li>$sudo apt-get install libreoffice</li>
+			  <li>Pour le type de pdf on peut utiliser document Viewer(déjà installé sous ubuntu),sinon $sudo apt-get install okular</li>
+			  </ul>
+			  <p>Ensuite, nous devons remplir le chemin correspondant, utiliser <strong>which 'application'</strong> dans le terminal pour trouver le chemin correspondant comme la figure 3</p>
+								
+								
+								</div>
+								<div class="content-gd col-lg-6">
+          <img src="assets/images/set.png" alt="" class="pic01">
+          <h3 class="title-small"><i>figure 3</i></h3>
+        </div>
+		
+						</div>
+					</div>
+				
+			 </div>
+	 </section>
+
 	<!-- footer-28 block -->
 <section class="w3l-footer">
   <footer class="footer-28">
@@ -164,6 +249,18 @@
   <!-- stats number counter-->
   <script src="assets/js/jquery.waypoints.min.js"></script>
   <script src="assets/js/jquery.countup.js"></script>
+  <script>
+    
+        $('.pic01').on('click',function(){
+            var picSrc =  $(this).attr('src')
+            $('.pic02 img').attr('src',picSrc)
+            $('.pic02').show() 
+        })
+        $('.pic02').on('click',function(){
+            $('.pic02').hide() 
+        })
+
+    </script>
   <script>
     $('.counter').countUp();
   </script>
