@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Station de partage vidéo</title>
+		<meta charset="utf-8" />
+		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+		<link rel="stylesheet" type="text/css" href="/static/css/upload.css">
+	</head>
+
+	<body>
+		<div class="contact">
+			<div id="loading" style="width:100%;height:100%;text-align: center;display:none;">
+				<b style="margin-top: 30px">Mise en ligne de la vidéo, veuillez ne pas fermer la page ...</b>
+				<img src="/static/img/loading.gif" draggable="false" style="width:100%;height:100%;" />
+			</div>
+			<form style="" name="form" method="post" action="{{ url_for('play.doupload') }}" enctype="multipart/form-data">
+				<a style="float:right" href="{{ url_for('play.index') }}">revenir</a>
+				<ul>
+					<li>
+						<label>Sharer：</label>
+						<input type="text" name="author" placeholder="veuillez entrer le nom d'utilisateur" onblur="checkna()" autocomplete="off" required/><span class="tips" id="divname">1~5 caractères de longueur</span>
+					</li>
+					<li>
+						<label>Titre：</label>
+						<input type="text" name="title" placeholder="Veuillez saisir le titre de la vidéo" onblur="checktle()" autocomplete="off" required/><span class="tips" id="divpd1">1~20 caractères de longueur</span>
+					</li>
+					<!--<li>
+                <label>la description：</label>
+                <input type="text" name="description" placeholder="Veuillez saisir la description de la vidéo" required/><span
+                    class="tips" id="divpd2">1 ~ 20 caractères de longueur</span>
+            </li>-->
+					<!--<li>
+                <label>Dessin joint：</label>
+                <input type="file" name="image" accept="image/*" required/>
+            </li>-->
+					<li>
+						<label>vidéo：</label>
+						<input type="file" name="video" accept="video/mp4" required/><span>Veuillez utiliser le format mp4</span>
+					</li>
+				</ul>
+				<b class="btn"><input type="submit" value="submit"/>
+            <input type="reset" value="Annuler"/></b>
+			</form>
+		</div>
+
+		<script src="/static/js/jquery-1.12.1.min.js"></script>
+		<script src="/static/js/upload.js"></script>
+		<script>
+			$('form').submit(function() {
+				$("form").hide();
+				$('#loading').show();
+			});
+		</script>
+	</body>
+
+</html>

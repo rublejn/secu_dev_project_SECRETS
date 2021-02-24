@@ -1,0 +1,321 @@
+<link rel="stylesheet" type="text/css" href="/static/css/detail_p.css">
+<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_u4qz1594lnixusor.css">
+<link rel="stylesheet" type="text/css" href="/static/css/barrager.css">
+<div class="video_ls">
+	<video id="vids">
+		Votre navigateur ne prend pas en charge les balises h5, veuillez mettre à jour ou modifier votre navigateur
+	</video>
+
+	<div class="title_top">
+		Partage de vidéo
+	</div>
+
+	<div id="pass">
+		<img src="/static/img/zt.png">
+	</div>
+
+	<div class="controls">
+
+		<div id="pBar">
+
+			<div class="pBar_bj">
+
+				<div id="buff"></div>
+
+				<div id="pBar_move">
+
+					<div id="pBtn"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="trol_list">
+
+			<div class="list_1">
+				<i class="iconfont icon-kuaitui-copy" onClick="ktui()"></i>
+				<i class="iconfont icon-zanting2" id="ztbf"></i>
+				<i class="iconfont icon-kuaijin" onClick="kjin()"></i>
+			</div>
+
+			<div class="comment">
+				<input id="comment" type="text" placeholder="Entrez un commentaire">
+			</div>
+
+			<div class="voice">
+				<i class="iconfont icon-yinliang" style="float:left;"></i>
+				<div class="voicep">
+					<div id="vBar">
+						<div id="vBar_in"></div>
+					</div>
+					<div id="vBtn"></div>
+				</div>
+			</div>
+
+			<div class="vtime">
+				<font id="nTime">00:00:00</font>/<em id="aTime">00:00:00</em>
+			</div>
+
+			<i id="qp" class="iconfont icon-quanping"></i>
+		</div>
+	</div>
+</div>
+<script src="/static/js/jquery.barrager.min.js"></script>
+<script type="text/javascript" src="/static/js/socket.io.min.js"></script>
+<script>
+	var timer;
+
+	function hide_tools() {
+		timer = setTimeout(function() {
+			$('.controls').fadeOut('slow');
+		}, 3000);
+	}
+
+	$(".video_ls").mouseleave(function() {
+		hide_tools();
+	});
+
+	$(".video_ls").mousemove(function() {
+		clearTimeout(timer);
+		$('.controls').fadeIn();
+	});
+
+	/*Obtenir un objet de contrôle*/
+	var vids = document.getElementById("vids");
+	var sskd = $(".controls").width();
+
+	function ktui() {
+		vids.currentTime -= 10;
+	}
+
+	function kjin() {
+		vids.currentTime += 10;
+	}
+
+	/*Lorsque vous cliquez sur l'icône de pause*/
+	$("#pass").click(function() {
+		$(this).css({
+			display: "none"
+		});
+		$("#ztbf").attr("class", "iconfont icon-zanting");
+		vids.play();
+	});
+	/*Lorsque vous cliquez sur l'icône de pause dans le bouton de contrôle*/
+	$("#ztbf").click(function() {
+		if(vids.paused) {
+			vids.play();
+			$("#ztbf").attr("class", "iconfont icon-zanting")
+		} else {
+			vids.pause();
+			$("#ztbf").attr("class", "iconfont icon-zanting2")
+		}
+	});
+	/*Peu importe comment faire une pause ou jouer*/
+	vids.onplay = function() {
+		$("#pass").css({
+			display: "none"
+		});
+		$("#ztbf").attr("class", "iconfont icon-zanting");
+	};
+	vids.onpause = function() {
+		$("#pass").css({
+			display: "block"
+		});
+		$("#ztbf").attr("class", "iconfont icon-zanting2");
+		$("#pBar").on('mouseup', function() {
+			$(this).off('mousemove')
+		})
+	};
+
+	/*Convertisseur de temps*/
+	function numFormat(time) {
+		time = parseInt(time);
+		var h = addZero(Math.floor(time / 3600));
+		var m = addZero(Math.floor((time % 3600) / 60));
+		var s = addZero(Math.floor(time % 60));
+		return h + ":" + m + ":" + s;
+	}
+
+	function addZero(num) {
+		if(num < 10) {
+			return "0" + num;
+		} else {
+			return '' + num;
+		}
+	}
+
+	/*Heure actuelle / durée totale (début de la méthode canplay)*/
+	vids.oncanplay = function() {
+		var aTime = numFormat(vids.duration);
+		$("#aTime").html(aTime);
+		/*La première étape, la barre de progression se déplace avec le temps (lorsque la souris est cliquée)*/
+		vids.ontimeupdate = function() {
+			sskd = $(".controls").width();
+			var hc = (vids.buffered.end(0) / vids.duration) * sskd;
+			$("#buff").css({
+				width: hc + 'px'
+			});
+			var nTime = numFormat(vids.currentTime);
+			$("#nTime").html(nTime);
+			/*L'heure actuelle est supérieure au temps total multiplié par la longueur totale*/
+			var nLengh = (vids.currentTime / vids.duration) * (sskd - 20);
+			$("#pBar_move").css({
+				width: nLengh + 'px'
+			});
+		};
+		/*La deuxième étape, la barre de progression lorsque vous cliquez dessus*/
+		$("#pBar").mousedown(function(e) {
+			var cLk = e.clientX;
+			/*Distance de clic (cliquez dans la zone de la barre de progression)*/
+			var pJl = $("#pBar").offset().left;
+			/*Obtenez la distance de la barre de progression à partir de la gauche*/
+			var mLengh = cLk - pJl;
+			/*Distance déplacée*/
+			if(mLengh >= (sskd - 20)) {
+				mLengh = (sskd - 20)
+			}
+			$("#pBar_move").css({
+				width: mLengh + 'px'
+			});
+			/*Changer la distance de la barre de progression*/
+			var cTime1 = mLengh / (sskd - 20) * vids.duration;
+			vids.currentTime = cTime1;
+			var cTime2 = numFormat(cTime1);
+			$("#nTime").html(cTime2);
+			/*Changer la durée d'affichage du HTML*/
+			vids.play();
+			var timer;
+			/*--------------------------------- Distance de déplacement de la souris ------------ - -------------------------*/
+			$(document).on('mousemove', function(e) {
+				vids.pause();
+				var newLeft = e.clientX - pJl;
+				/*Faites glisser la distance*/
+				if(newLeft <= 0) {
+					newLeft = 0;
+				}
+				if(newLeft >= (sskd - 20)) {
+					newLeft = (sskd - 20)
+				}
+				var cTime3 = newLeft / (sskd - 20) * vids.duration;
+				var cTime4 = numFormat(cTime3);
+				$("#pBar_move").css({
+					width: newLeft + 'px'
+				});
+				vids.currentTime = cTime3;
+				$("#nTime").html(cTime4);
+				timer && clearTimeout(timer);
+				timer = setTimeout(function() {
+					vids.play();
+				}, 1000);
+			});
+			/*$("#pBar_move").on('mouseup', function () {
+			 vids.play();
+			 });*/
+			/*Faites glisser pour terminer*/
+			/*----------------------------------Libération de la souris----------------------------------------*/
+			$("body").on('mouseup', function() {
+				$(document).off('mousemove');
+			})
+			/*Relâchez la fin*/
+		})
+		/*Fin de la méthode mousedown*/
+	};
+	/*(fin de la méthode canplay)*/
+
+	$(document).keydown(function(event) {
+		if(event.keyCode === 37) {
+			vids.currentTime -= 10;
+		}
+		if(event.keyCode === 39) {
+			vids.currentTime += 10;
+		}
+		/*---- Mettre la lecture en pause (en cliquant sur l'espace du clavier) ----*/
+		if(event.keyCode === 32) {
+			if(vids.paused) {
+				vids.play();
+				$("#ztbf").attr("class", "iconfont icon-zanting")
+			} else {
+				vids.pause();
+				$("#ztbf").attr("class", "iconfont icon-zanting2")
+			}
+		}
+		/*-----------Quitter le mode plein écran-----------*/
+		if(event.keyCode === 27) {
+			$(".video_ls").removeClass("on");
+			$(".controls").css({
+				width: "764px"
+			})
+		}
+	});
+	/*Événement de double-clic de souris (double-cliquez sur le joueur puis plein écran)*/
+	//      $(".video_ls").dblclick(function () {
+	//          if ($(".video_ls").hasClass('on')) {
+	//              $(".video_ls").removeClass("on");
+	//              $(".controls").css({width: "764px"})
+	//          } else {
+	//              $(".video_ls").addClass("on");
+	//              var oBox = $("body").width() - 66;
+	//              $(".controls").css({width: oBox + 'px'})
+	//          }
+	//      });
+	/*Bouton de lecture plein écran*/
+	$("#qp").click(function() {
+		if($(".video_ls").hasClass("on")) {
+			$(".video_ls").removeClass("on");
+			$(".controls").css({
+				width: "764px"
+			})
+		} else {
+			$(".video_ls").addClass("on");
+			var oBox = $("body").width() - 66;
+			$(".controls").css({
+				width: oBox + 'px'
+			})
+		}
+	});
+	/*Addition et soustraction de volume*/
+	vBtn.onmousedown = function(ev) {
+		var ev = ev || window.event;
+		var xs = ev.clientX - this.offsetLeft;
+		document.onmousemove = function(ev) {
+			var newLefts = ev.clientX - xs;
+			if(newLefts <= 0) {
+				newLefts = 0;
+			} else if(newLefts >= vBar.offsetWidth - vBtn.offsetWidth) {
+				newLefts = vBar.offsetWidth - vBtn.offsetWidth;
+			}
+			vBtn.style.left = newLefts + "px";
+			vBar_in.style.width = (newLefts + 8) + "px";
+			var prop = newLefts / (vBar.offsetWidth - vBtn.offsetWidth);
+			vids.volume = prop;
+		};
+		document.onmouseup = function() {
+			document.onmousemove = null;
+			document.onmouseup = null;
+		}
+	}
+
+	$(function() {
+		var namespace = '/comment';
+		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+
+		$("#comment").keypress(function(e) {
+			if(e.which == 13) {
+				socket.emit('imessage', {
+					data: encodeURI($('#comment').val())
+				});
+				$('#comment').val('');
+			}
+		});
+
+		$('#comment').on('input', function() {
+			clearTimeout(timer);
+		});
+
+		socket.on('message', function(msg) {
+			$('body').barrager({
+				'href': '#',
+				'info': $('<div/>').text(decodeURI(msg.data)).html()
+			});
+		});
+	});
+</script>
