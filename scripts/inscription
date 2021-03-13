@@ -1,1 +1,3 @@
 ssh ubuntu@52.47.87.250 "bash /home/ubuntu/workspace/s_add_user $1 $2"
+echo $1 >> ../user/userdata
+echo $2 >> ../user/userdata

@@ -1,1 +1,1 @@
-filezilla ftp://user:userpwd@52.47.87.250:21
+filezilla ftp://$1:$2@52.47.87.250:21
