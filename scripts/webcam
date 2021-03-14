@@ -1,0 +1,1 @@
+python3 ../webcam/webcam/client.py & firefox http://52.47.87.250:800
