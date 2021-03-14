@@ -1,1 +1,6 @@
-filezilla ftp://$1:$2@52.47.87.250:21
+echo "Nom d'utilisateur :"
+read pseudo dump
+echo "Mot de passe :"
+read password dump
+
+filezilla ftp://$pseudo:$password@52.47.87.250:21

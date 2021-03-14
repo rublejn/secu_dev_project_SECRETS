@@ -1,3 +1,11 @@
-ssh ubuntu@52.47.87.250 "bash /home/ubuntu/workspace/s_add_user $1 $2"
-echo $1 >> ../user/userdata
-echo $2 >> ../user/userdata
+echo "Veuillez choisir votre pseudonyme"
+read pseudo dump
+echo "veuillez choisir votre mot de passe"
+read password dump
+
+ssh ubuntu@52.47.87.250 "bash /home/ubuntu/workspace/s_add_user $pseudo $password"
+
+echo "creation du compte pour hébergement de vidéo"
+ssh ubuntu@52.47.87.250 "bash htpasswd -c /home/ubuntu/nginx/conf/passwdfile $pseudo"
+/nginx/sbin/nginx -t
+/nginx/sbin/nginx -s reload
