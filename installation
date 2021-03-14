@@ -1,0 +1,5 @@
+ssh-copy-id -i ~/.ssh/id_rsa.pub ubuntu@52.47.87.250
+sudo apt update
+sudo apt install firefox-esr
+sudo apt-get install filezilla
+sudo apt install python-opencv
